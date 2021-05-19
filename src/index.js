@@ -1,8 +1,11 @@
-
+import {createStore} from "redux";
 
 const form = document.querySelector("form");
 const input = document.querySelector("input");
 const ul = document.querySelector("ul");
+
+const ADD_TODO = "ADD_TODO";
+const DELETE_TODO = "DELETE_TODO";
 
 /**
  * 
@@ -12,19 +15,26 @@ const ul = document.querySelector("ul");
  * 리덕스는 이런 행동들을 좀 더 멋지게 작동하게 해줍니다.
 */
 
+// 리듀서는 항상 두가지 전달인자를 받아야 합니다.
+// 현재 상태와 action 객체이죠
+const reducer = (state = [], action) => { // 첫 state가 없다면 빈 array를 할당해줍니다.
+  switch (action.type) {
+    case ADD_TODO:
+      return []; // NEVER MUTATE STATE
+    case DELETE_TODO:
+      return [];
+    default:
+      return state;
+  }
+}
 
-
-const createTodo = (toDo) => {
-  const li = document.createElement("li");
-  li.innerText = toDo;
-  ul.appendChild(li);
-};
+const store = createStore(reducer);
 
 const onSubmit = (e) => {
   e.preventDefault();
   const toDo = input.value;
   input.value = "";
-  createTodo(toDo);
+  store.dispatch({type: ADD_TODO, text: toDo});
 }
 
 form.addEventListener("submit", onSubmit); // submit을 하면 enter키도 먹는다 짱 신기
