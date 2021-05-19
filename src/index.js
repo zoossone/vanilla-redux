@@ -32,9 +32,13 @@ const deleteToDo = (id) => {
 const reducer = (state = [], action) => { // 첫 state가 없다면 빈 array를 할당해줍니다.
   switch (action.type) {
     case ADD_TODO:
-      return [...state, {text: action.text, id: Date.now()}]; // NEVER MUTATE STATE - store를 수정할 수 있는 유일한 방법은 action을 보내는것 뿐이다. 그니까 새로운 Object를 리턴해 줘야 한다.
+      const newToDo = {text: action.text, id: Date.now()};
+      return [newToDo, ...state]; // NEVER MUTATE STATE - store를 수정할 수 있는 유일한 방법은 action을 보내는것 뿐이다. 그니까 새로운 Object를 리턴해 줘야 한다.
     case DELETE_TODO:
-      return [];
+      const cleaned = state.filter((toDo) => { // NEVER MUTATE STATE - 필터를 사용해서 새로운 array를 리턴하는중
+        return toDo.id !== action.id;
+      });
+      return cleaned;
     default:
       return state;
   }
@@ -42,16 +46,21 @@ const reducer = (state = [], action) => { // 첫 state가 없다면 빈 array를
 
 const store = createStore(reducer);
 
-const dispatchAddToDo = (text) => {
+const dispatchAddToDo = (text) => { // 오로지 디스패치를 하기 위한 함수
   store.dispatch(addToDo(text));
 };
 
 const dispatchDeleteToDo = (e) => {
   // console.log(e.target.parentNode.id); // 우리는 클릭한 녀석의 부모 노드를 보고싶다. 왜냐하면 지울 녀석의 id를 알고싶거든
-  const id = e.target.parentNode.id;
+  const id = parseInt(e.target.parentNode.id); // 아마 string일테니까 parseInt 해주세요.
   store.dispatch(deleteToDo(id))
 };
 
+
+/**
+ * 이 paintToDos의 과정은 프로젝트가 커지면 조금 느려질 가능성이 있다.
+ * 이 부분에서는 react를 써주는 것이 조금 더 효율적일지도 모른다.
+ */
 const paintToDos = () => {
   const toDos = store.getState();
   ul.innerHTML = ""; // store가 바뀔때마다 항상 모든걸 다 그려줘서 계속 리스트가 겹쳐서 덮힌다. 그래서 한 번 싹 비워준다.
@@ -69,7 +78,7 @@ const paintToDos = () => {
 
 store.subscribe(() => console.log(store.getState()));
 
-store.subscribe(paintToDos);
+store.subscribe(paintToDos); // subscribe는 todos의 변화에 맞게 list를 repainting하고 있다.
 
 
 
