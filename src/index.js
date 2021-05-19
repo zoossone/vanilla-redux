@@ -36,5 +36,5 @@ const onClick = () => {
 
 countStore.subscribe(onClick); // statre의 변화를 구독해서 따라갈 수 있다.
 
-plus.addEventListener("click", () => { countStore.dispatch({ type: ADD }) });
+plus.addEventListener("click", () => { countStore.dispatch({ type: ADD }) }); // 디스패치를 통해 action 객체를 보내줄 수 있다.
 minus.addEventListener("click", () => { countStore.dispatch({ type: MINUS }) });
