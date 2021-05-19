@@ -1,40 +1,30 @@
-import { createStore } from "redux";
 
-const plus = document.querySelector("#plus");
-const minus = document.querySelector("#minus");
-const number  = document.querySelector("span");
 
-const ADD = "ADD"; // 오타로 인한 실수를 줄이기 위해서
-const MINUS = "MINUS";
-
-number.innerText = 0; // HTML을 보여주기 위한 초기화
-
+const form = document.querySelector("form");
+const input = document.querySelector("input");
+const ul = document.querySelector("ul");
 
 /**
- * 보통 리듀서에서는 초기화를 사용한다. state값이 설정되어있지 않으면 initailValue를 넣어줄 수 있다.
- * reducer에서 반환하는 어떤값이든 그게 곧 상태가 된다.
- * 그리고 data의 modify는 오직 리듀서에서만 이뤄진다. 다른 함수에서는 절대 관리할 수 없다.
- * action 객체를 보내줘서 reducer를 동작할 수 있다.
  * 
- */
-const reducer = (count = 0, action) => {
-  switch(action.type) {
-    case ADD:
-      return count + 1;
-    case MINUS:
-      return count - 1;
-    default:
-      return count;
-  }
+ * 지금 하는 방식은 dataless입니다.
+ * 만약 바닐라 자바스크립트 방식으로 데이터를 저장하고 싶다면 array를 하나 만들어서 그 안에 todo들을 집어 넣어서 저장해주는 방식을 채택할 수 있겠죠.
+ * 새로운 데이터를 배열에 추가하고 빼면 빼주고 저장하면 로컬에 저장해주고 이게 얼마나 많은 함수를 필요로 할지 모릅니다.
+ * 리덕스는 이런 행동들을 좀 더 멋지게 작동하게 해줍니다.
+*/
+
+
+
+const createTodo = (toDo) => {
+  const li = document.createElement("li");
+  li.innerText = toDo;
+  ul.appendChild(li);
 };
 
-const countStore = createStore(reducer);
-
-const onClick = () => {
-  number.innerText = countStore.getState();
+const onSubmit = (e) => {
+  e.preventDefault();
+  const toDo = input.value;
+  input.value = "";
+  createTodo(toDo);
 }
 
-countStore.subscribe(onClick); // statre의 변화를 구독해서 따라갈 수 있다.
-
-plus.addEventListener("click", () => { countStore.dispatch({ type: ADD }) }); // 디스패치를 통해 action 객체를 보내줄 수 있다.
-minus.addEventListener("click", () => { countStore.dispatch({ type: MINUS }) });
+form.addEventListener("submit", onSubmit); // submit을 하면 enter키도 먹는다 짱 신기
