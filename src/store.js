@@ -3,17 +3,17 @@ import {createStore} from "redux";
 const ADD = "ADD";
 const DELETE = "DELETE";
 
-export const addToDo = text => {
+const addToDo = text => {
     return {
         type: ADD,
         text
     }
 }
 
-export const deleteToDo = id =>{
+const deleteToDo = id =>{
     return {
-        tyoe: DELETE,
-        id
+        type: DELETE,
+        id: parseInt(id)
     }
 }
 
@@ -34,5 +34,9 @@ const store = createStore(reducer);
 // 뭔가 변화가 일어나면 Application을 다시 render 하고싶다.
 // 즉 store가 바뀔때마다 다시 render하고싶기 때문에 redux-react에서 store를 subscribe한다.
 // * 하지만 실습에서 하는 이 부분은 예전의 방식일지 모른다. 참고만 해두면 좋을것 같다.
+export const actionCreators = {
+    addToDo,
+    deleteToDo
+}
 
 export default store;
