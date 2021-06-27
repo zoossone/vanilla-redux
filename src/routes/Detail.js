@@ -13,9 +13,7 @@ const mapStateToProps = (state, ownProps) => {
         { params:
             {id} } // 구조분해할당때 괄호에 안 넣으면 그냥 params가 대체된다.
     } = ownProps;
-
-    console.log(ownProps)
-    console.log(state)
+    
     return {
         toDo: state.find(todo => todo.id === parseInt(id))
     }
